@@ -1,0 +1,35 @@
+@font-face {
+  font-family: "SevenSegment";
+  src: url("../fonts/7 Segment.ttf");
+}
+
+#content-info {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: fit-content;
+  height: 180px;
+  padding: 0 3%;
+  background-color: #AAAAAAAA;
+}
+
+.page-name-text {
+  font-family: "SevenSegment", sans-serif;
+  font-size: 60px;
+  white-space: nowrap;
+}
+
+.ghost {
+  position: relative;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.visible {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+}
+

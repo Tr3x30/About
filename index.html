@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Clipped Overlay Windows</title>
+  <title>Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/bottomOverlay.css">
+  <link rel="stylesheet" href="styles/pageMenuNavbar.css">
+  <link rel="stylesheet" href="styles/cardDisplay.css">
 </head>
 <script src="script.js"></script>
 
 <body>
   <div class="container">
-    <div class="content-pane">
-      <div id="content-grid" class="content-block-grid">
-        <div class="content-block"></div>
-        <div class="content-block"></div>
-        <div class="content-block"></div>
-        <div class="content-block"></div>
+    <div id="content-pane">
+      <div id="content-grid">
+        <div class="content-block block-2x2" data-card="about-1">
+          <div class="card-thumb">
+            <img src="https://blocks.astratic.com/img/general-img-landscape.png" width="auto">
+            <!-- Insert IFRAME with JS based on data-card -->
+            <!-- <iframe src="https://www.desmos.com/calculator/uuluuqljb8?embed" frameborder="0"></iframe> -->
+          </div>
+          <div class="card-content">
+
+          </div>
+        </div>
+
         <div class="content-block"></div>
         <div class="content-block"></div>
         <div class="content-block"></div>
@@ -48,7 +58,9 @@
         <div class="content-block"></div>
       </div>
 
-      <div id="page-menu" class="page-panel">
+
+      <!-- data-text required for preventing div size changing on selection -->
+      <div id="page-menu">
         <div class="menu-text active" data-text="ABOUT">ABOUT</div>
         <div class="menu-text" data-text="EXPERIENCE">EXPERIENCE</div>
         <div class="menu-text" data-text="SKILLS">SKILLS</div>
@@ -57,27 +69,20 @@
       </div>
     </div>
 
-    <div class="menu-bar">      
-      <svg id="menu-bar-background" width="100%" top="0" left="50px" >
-        <path id="menu-path" d="M 0 0
-        l 640 0
-        c 100 0, 100 180, 200 180
-        l 640 0
-        c 100 0, 100 -180, 200 -180
-        l 640 0
-        l 0 360
-        L 0 360 z" stroke="none" fill="blue"/>
+    <div id="overlay-bar">
+      <svg id="menu-bar-background" width="100%" top="0" left="50px">
+        <path id="menu-path" stroke="none" fill="blue" />
       </svg>
 
-      <div id="content-info" class="page-info-div">
-        <!-- visible title (JS updates this) -->
-        <div id="menu-title" class="page-info-text visible">PROJECTS</div>
+      <div id="content-info">
+        <div id="menu-title" class="page-name-text visible">ABOUT</div>
 
-        <!-- sizing ghosts (static, invisible, never updated) -->
-        <div class="page-info-text ghost">EXPERIENCE</div>
+        <!-- sizing ghost (static, invisible) to hold div sizing -->
+        <div class="page-name-text ghost">EXPERIENCE</div>
       </div>
 
     </div>
   </div>
 </body>
+
 </html>

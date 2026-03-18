@@ -1,0 +1,113 @@
+#content-grid {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 1vw;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: top 0.5s ease;
+  justify-content: center;
+  top: 5%;
+  width: 66%;
+  overflow: visible;
+}
+
+.card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: transparent;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.content-block {
+  position: relative;
+  background: antiquewhite;
+  aspect-ratio: 4 / 3;
+  cursor: pointer;
+  border-radius: calc(1vw + 3px);
+  overflow: hidden;
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* GRID STYLING SIZES (ex 1x2, 2x2) */
+.block-1x1 {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.block-2x1 {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.block-1x2 {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.block-2x2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* Always present */
+.content-block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: calc(1vw + 3px);
+  border: 3px solid #ff0000;
+  pointer-events: none;
+
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* Colour breathing */
+@keyframes borderFlow {
+  0% {
+    border-color: #ff0000;
+  }
+
+  50% {
+    border-color: #0000ff;
+  }
+
+  100% {
+    border-color: #ff0000;
+  }
+}
+
+/* Hover Border */
+.content-block:hover::after {
+  opacity: 1;
+  animation: borderFlow 3s ease-in-out infinite;
+}
+
+
+/* Remove border for large card*/
+.content-block.no-border::after {
+  display: none;
+}
+
+.card-thumb {
+  position: relative;
+  height: 100%;
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Official_CSS_Logo.svg");
+  background-size: cover;
+}
+
+.card-thumb {
+  display: flex;
+  pointer-events: none;
+}
+
+.card-content {
+  height: 100%;
+  background-image: url("https://www.cssscript.com/wp-content/uploads/2020/09/Animated-Skeleton-Loading-Screens-In-Pure-CSS.jpg");
+}

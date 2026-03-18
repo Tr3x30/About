@@ -1,0 +1,42 @@
+#page-menu {
+  position: relative;
+  top: 50%;
+  left: 90%;
+  transform: translate(-50%,-50%);
+  height: 33vh;
+  width: fit-content;
+  display: grid;
+  align-items: center;
+  grid-template-rows: repeat(4, 1fr);
+  min-width: 0;
+}
+
+.menu-text {
+  position: relative;
+  color: #777;
+  font-weight: 500;
+  width: fit-content;
+  padding: 0.5em;
+  cursor: pointer;
+  transition: color 0.25s ease, font-weight 0.25s ease;
+}
+
+.menu-text::after {
+  content: attr(data-text);
+  font-weight: 700;
+  visibility: hidden;
+  white-space: nowrap;
+  display: block;
+  height: 0;
+  overflow: hidden;
+}
+
+.menu-text.active {
+  color: #222;
+  font-weight: 700;
+}
+
+
+.menu-text:hover:not(.active) {
+  color: #333;
+}
