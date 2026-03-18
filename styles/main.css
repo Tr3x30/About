@@ -4,6 +4,11 @@ body, html {
   overflow: hidden;
 }
 
+body {
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
 .container {
   position: fixed;
   top: 0;
