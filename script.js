@@ -347,9 +347,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   items.forEach((item, index) => {
     item.addEventListener('click', () => {
-      items.forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-      goToIndex(index);
+      const grid = document.getElementById('content-grid');
+      const columns = window.getComputedStyle(grid)
+        .gridTemplateColumns
+        .split(' ')
+        .filter(Boolean).length || 4;
+
+      const isMobileLayout = columns === 2;
+
+      const targetIndex = isMobileLayout ? index * 2 : index;
+
+      goToIndex(targetIndex);
     });
   });
 });
