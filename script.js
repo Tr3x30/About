@@ -163,16 +163,18 @@ function openCardClone(originalCard) {
     targetHeight = targetWidth * (3 / 4);
   }
 
-  const targetTop = (vh - targetHeight) / 2;
-  const targetLeft = (vw - targetWidth) / 2;
+  console.log(vw * 0.8);
+
+  const targetTop = Math.floor((vh - targetHeight) / 2);
+  const targetLeft = Math.floor((vw - targetWidth) / 2);
 
   /* ---------- TRIGGER ANIMATION ---------- */
   requestAnimationFrame(() => {
     overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
     clone.style.top = `${targetTop}px`;
     clone.style.left = `${targetLeft}px`;
-    clone.style.width = `${targetWidth}px`;
-    clone.style.height = `${targetHeight}px`;
+    clone.style.width = `${Math.ceil(targetWidth)}px`;
+    clone.style.height = `${Math.ceil(targetHeight)}px`;
   });
 
   /* ---------- CLOSE HANDLERS ---------- */
