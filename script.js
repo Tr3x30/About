@@ -153,20 +153,60 @@ function goToIndex(index) {
 }
 
 function closeCardClone(overlay, clone) {
-  // Animate back to original position
   const rect = clone._originRect;
+  const startRect = clone.getBoundingClientRect();
+  const content = clone.querySelector('.card-content');
+  const thumbnail = clone.querySelector('.card-thumb');
 
-  overlay.style.backgroundColor = 'rgba(0,0,0,0)';
-  clone.style.top = `${rect.top}px`;
-  clone.style.left = `${rect.left}px`;
-  clone.style.width = `${rect.width}px`;
-  clone.style.height = `${rect.height}px`;
+  const duration = 500;
+  let startTime = null;
 
-  setTimeout(() => {
-    overlay.remove();
-    scrollLocked = false;
-  }, 500);
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function lerp(start, end, t) {
+    return start + (end - start) * t;
+  }
+
+  function animate(timestamp) {
+    if (startTime === null) startTime = timestamp;
+
+    const elapsed = timestamp - startTime;
+    const rawProgress = Math.min(elapsed / duration, 1);
+    const progress = easeOutCubic(rawProgress);
+
+    const currentTop = lerp(startRect.top, rect.top, progress);
+    const currentLeft = lerp(startRect.left, rect.left, progress);
+    const currentWidth = lerp(startRect.width, rect.width, progress);
+    const currentHeight = lerp(startRect.height, rect.height, progress);
+
+    clone.style.top = `${currentTop}px`;
+    clone.style.left = `${currentLeft}px`;
+    clone.style.width = `${currentWidth}px`;
+    clone.style.height = `${currentHeight}px`;
+
+    overlay.style.backgroundColor = `rgba(0,0,0,${0.5 * (1 - progress)})`;
+
+    if (content) {
+      content.style.opacity = `${1 - progress}`;
+    }
+
+    if (thumbnail) {
+      thumbnail.style.opacity = progress
+    }
+
+    if (rawProgress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      overlay.remove();
+      scrollLocked = false;
+    }
+  }
+
+  requestAnimationFrame(animate);
 }
+
 
 function openCardClone(originalCard) {
   scrollLocked = true;
@@ -174,8 +214,13 @@ function openCardClone(originalCard) {
   /* ---------- OVERLAY ---------- */
   const overlay = document.createElement('div');
   overlay.className = 'card-overlay';
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
   overlay.style.backgroundColor = 'rgba(0,0,0,0)';
-  overlay.style.transition = 'background-color 0.5s ease';
+  overlay.style.zIndex = '2000';
   document.body.appendChild(overlay);
 
   /* ---------- CLONE ---------- */
@@ -183,19 +228,23 @@ function openCardClone(originalCard) {
   clone.classList.add('no-border');
   clone.style.position = 'fixed';
   clone.style.margin = '0';
-  clone.style.transition = 'top 0.5s ease, left 0.5s ease, width 0.5s ease, height 0.5s ease';
   clone.style.backgroundColor = '#ffd580';
   clone.style.zIndex = '2100';
 
-  let thumbnail = clone.querySelector('.card-thumb');
-  thumbnail.style.display = "none";
-  let content = clone.querySelector('.card-content');
-  content.style.display = "block";
+  const thumbnail = clone.querySelector('.card-thumb');
+  const content = clone.querySelector('.card-content');
+
+  if (thumbnail) {
+    thumbnail.style.opacity = '1';
+  }
+  if (content) {
+    content.style.display = 'block';
+    content.style.opacity = '0';
+  }
 
   const rect = originalCard.getBoundingClientRect();
   clone._originRect = rect;
 
-  // Start exactly on top of original
   clone.style.top = `${rect.top}px`;
   clone.style.left = `${rect.left}px`;
   clone.style.width = `${rect.width}px`;
@@ -216,17 +265,54 @@ function openCardClone(originalCard) {
     targetHeight = targetWidth * (3 / 4);
   }
 
-  const targetTop = Math.floor((vh - targetHeight) / 2);
-  const targetLeft = Math.floor((vw - targetWidth) / 2);
+  const targetTop = (vh - targetHeight) / 2;
+  const targetLeft = (vw - targetWidth) / 2;
 
-  /* ---------- TRIGGER ANIMATION ---------- */
-  requestAnimationFrame(() => {
-    overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    clone.style.top = `${targetTop}px`;
-    clone.style.left = `${targetLeft}px`;
-    clone.style.width = `${Math.ceil(targetWidth)}px`;
-    clone.style.height = `${Math.ceil(targetHeight)}px`;
-  });
+  /* ---------- ANIMATION ---------- */
+  const duration = 500;
+  let startTime = null;
+
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function lerp(start, end, t) {
+    return start + (end - start) * t;
+  }
+
+  function animate(timestamp) {
+    if (startTime === null) startTime = timestamp;
+
+    const elapsed = timestamp - startTime;
+    const rawProgress = Math.min(elapsed / duration, 1);
+    const progress = easeOutCubic(rawProgress);
+
+    const currentTop = lerp(rect.top, targetTop, progress);
+    const currentLeft = lerp(rect.left, targetLeft, progress);
+    const currentWidth = lerp(rect.width, targetWidth, progress);
+    const currentHeight = lerp(rect.height, targetHeight, progress);
+
+    clone.style.top = `${currentTop}px`;
+    clone.style.left = `${currentLeft}px`;
+    clone.style.width = `${currentWidth}px`;
+    clone.style.height = `${currentHeight}px`;
+
+    overlay.style.backgroundColor = `rgba(0,0,0,${0.5 * progress})`;
+
+    if (content) {
+      content.style.opacity = progress;
+    }
+
+    if (thumbnail) {
+      thumbnail.style.opacity = 1 - progress;
+    }
+
+    if (rawProgress < 1) {
+      requestAnimationFrame(animate);
+    }
+  }
+
+  requestAnimationFrame(animate);
 
   /* ---------- CLOSE HANDLERS ---------- */
   overlay.addEventListener('click', (e) => {
@@ -241,6 +327,7 @@ function openCardClone(originalCard) {
       document.removeEventListener('keydown', escHandler);
     }
   }
+
   document.addEventListener('keydown', escHandler);
 }
 
