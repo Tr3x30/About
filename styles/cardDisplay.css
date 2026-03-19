@@ -13,6 +13,12 @@
   overflow: visible;
 }
 
+@media screen and (max-width: 500px) {
+  #content-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .card-overlay {
   position: fixed;
   inset: 0;

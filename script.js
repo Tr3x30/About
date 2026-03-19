@@ -5,6 +5,11 @@ let scrollLocked = false;
 let currentIndex = 0;
 let lastDeltaMagnitude = 0;
 
+// MOBILE
+let touchStartY = 0;
+let touchEndY = 0;
+const SWIPE_THRESHOLD = 5; // in vh
+
 
 function updateMenuBar() {
   const svg = document.getElementById('menu-bar-background');
@@ -54,50 +59,98 @@ function updateMenuBar() {
   }
 }
 
+function handleSwipe(deltaY) {
+  if (scrollLocked) return;
+
+  const threshold = (SWIPE_THRESHOLD / 100) * window.innerHeight;
+  if (Math.abs(deltaY) < threshold) return;
+
+  scrollLocked = true;
+
+  goToIndex(currentIndex + (deltaY > 0 ? 1 : -1));
+
+  setTimeout(() => {
+    scrollLocked = false;
+  }, SCROLL_LOCK_TIME);
+}
+
 function goToIndex(index) {
-  console.log(index);
   const items = document.querySelectorAll('.menu-text');
   const title = document.getElementById('menu-title');
-
-  // Clamp index (important for scroll input)
-  currentIndex = Math.max(0, Math.min(index, items.length - 1));
-
-  // ---- UPDATE MENU STATE ----
-  items.forEach(i => i.classList.remove('active'));
-
-  const activeItem = items[currentIndex];
-  activeItem.classList.add('active');
-
-  if (title) {
-    title.textContent = activeItem.textContent;
-  }
-
-  // ---- SCROLL GRID ----
   const grid = document.getElementById('content-grid');
   const block = document.querySelector('.content-block');
+
+  if (!items.length || !grid || !block) return;
 
   const windowHeight = window.innerHeight;
   const windowWidth = window.innerWidth;
 
-  let blockHeight = block.offsetHeight;
-  blockRows = window.getComputedStyle(block).gridRow;
-  if (blockRows != "auto") {
-    blockRows = blockRows.replace("span ", "");
-    blockHeight /= parseInt(blockRows);
+  const gridStyle = window.getComputedStyle(grid);
+  const blockStyle = window.getComputedStyle(block);
+
+  // Detect current column count
+  const columns = gridStyle.gridTemplateColumns.split(' ').filter(Boolean).length || 4;
+
+  // Mobile = 2 columns, Desktop = 4 columns
+  const isMobileLayout = columns === 2;
+
+  // On mobile, each real section takes 2 positions
+  const maxScrollIndex = isMobileLayout
+    ? (items.length * 2) - 1
+    : items.length - 1;
+
+  // Clamp scroll index
+  currentIndex = Math.max(0, Math.min(index, maxScrollIndex));
+
+  // Section index controls active title/menu state
+  const sectionIndex = isMobileLayout
+    ? Math.floor(currentIndex / 2)
+    : currentIndex;
+
+  // ---- UPDATE MENU STATE ----
+  items.forEach(i => i.classList.remove('active'));
+
+  const activeItem = items[sectionIndex];
+  if (activeItem) {
+    activeItem.classList.add('active');
+
+    if (title) {
+      title.textContent = activeItem.textContent;
+    }
   }
+
+  // ---- SCROLL GRID ----
+
+  // Find single-row height
+  let blockHeight = block.offsetHeight;
+  let blockRows = blockStyle.gridRow;
+
+  if (blockRows && blockRows !== "auto") {
+    blockRows = blockRows.replace("span ", "");
+    const span = parseInt(blockRows, 10);
+    if (!isNaN(span) && span > 0) {
+      blockHeight /= span;
+    }
+  }
+
+  const rowGap = parseFloat(gridStyle.rowGap) || 0;
+
+  // Full section height:
+  // desktop: 2 rows
+  // mobile: 4 rows
+  const rowsPerSection = columns === 2 ? 4 : 2;
+
+  // But mobile needs half-section stepping
+  const rowsPerStep = isMobileLayout ? 2 : rowsPerSection;
+
+  const stepSize = (rowsPerStep * blockHeight) + ((rowsPerStep - 1) * rowGap);
 
   const gridMargin = 0.05 * windowHeight;
-  const cellPadding = (currentIndex / 50) * windowWidth;
-  const cellSize = 2 * blockHeight * currentIndex;
-  const idealTop = gridMargin - cellPadding - cellSize;
+  const idealTop = gridMargin - (stepSize * currentIndex);
   const maxTop = windowHeight / 2 - grid.offsetHeight;
-  const tooWide = 0.62 * windowHeight < 0.02 * windowWidth + 2 * blockHeight;
-  if (tooWide) {
-    console.log(`Max: ${0.62 * windowHeight}\tCurrent: ${0.02 * windowWidth + 2 * blockHeight}`);
-  }
+
   grid.style.top = `${Math.max(idealTop, maxTop)}px`;
 }
-
 
 function closeCardClone(overlay, clone) {
   // Animate back to original position
@@ -162,8 +215,6 @@ function openCardClone(originalCard) {
     targetWidth = maxWidth;
     targetHeight = targetWidth * (3 / 4);
   }
-
-  console.log(vw * 0.8);
 
   const targetTop = Math.floor((vh - targetHeight) / 2);
   const targetLeft = Math.floor((vw - targetWidth) / 2);
@@ -272,6 +323,16 @@ window.addEventListener('wheel', (e) => {
 
 }, { passive: false }); // Allow preventDefault();
 
+window.addEventListener('touchstart', (e) => {
+  if (scrollLocked) return;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener('touchend', (e) => {
+  touchEndY = e.changedTouches[0].clientY;
+  const deltaY = touchStartY - touchEndY;
+  handleSwipe(deltaY);
+}, { passive: true });
 
 window.addEventListener('resize', () => {
   updateMenuBar();
