@@ -30,27 +30,39 @@ body {
 /* RIGHT CONTENT */
 .content-section {
     flex: 1;
-    padding: 5vw;
+    padding: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-content: center;
+    flex-wrap:wrap;
     gap: 2vh;
+    text-align: justify;
+}
+
+#description {
+    width: fit-content;
 }
 
 /* TEXT STYLES */
-.name {
+#name {
+    text-align: center;
     font-size: 5vw;
+    width: fit-content;
 }
 
-.title {
+#title {
+    text-align: center;
     font-size: 2vw;
     color: #666;
+    width: fit-content;
 }
 
 .bio {
     font-size: 1.5vw;
     line-height: 1.6;
-    max-width: 80%;
+    max-width: 40vw;
+    width: fit-content;
 }
 
 /* INFO BLOCK */
@@ -60,4 +72,5 @@ body {
     flex-direction: column;
     gap: 1vh;
     font-size: 1.5vw;
+    width: fit-content;
 }
