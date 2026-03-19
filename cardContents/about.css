@@ -35,13 +35,18 @@ body {
     flex-direction: column;
     justify-content: center;
     align-content: center;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
     gap: 2vh;
     text-align: justify;
 }
 
 #description {
     width: fit-content;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 /* TEXT STYLES */
@@ -59,7 +64,8 @@ body {
 }
 
 .bio {
-    font-size: 1.5vw;
+    margin: 3vh 0;
+    font-size: clamp(8px, 2vw, 2vw);
     line-height: 1.6;
     max-width: 40vw;
     width: fit-content;
@@ -71,6 +77,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1vh;
-    font-size: 1.5vw;
+    font-size: clamp(6px, 1.5vw, 1.5vw);
     width: fit-content;
 }

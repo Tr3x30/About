@@ -21,7 +21,7 @@ function resizeTitleName() {
     const px = (value) => parseFloat(value);
 
     name.style.fontSize = "20px";
-    title.style.fontSize = "15px";
+    title.style.fontSize = "5px";
 
     let fontSize = px(computedName.fontSize);
     let maxWidth = name.parentElement.offsetWidth;
