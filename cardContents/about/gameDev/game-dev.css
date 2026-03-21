@@ -1,0 +1,204 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #111827;
+    color: #f3f4f6;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 6vh 6vw;
+    display: flex;
+    flex-direction: column;
+    gap: 6vh;
+}
+
+.intro {
+    max-width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.intro h1 {
+    font-size: 4vw;
+}
+
+.intro p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    text-align: justify;
+}
+
+.featured {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4%;
+    padding: 4vh 4vw;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2rem;
+}
+
+.featured-text {
+    flex: 0 0 48%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.featured-text h2 {
+    font-size: 2.5vw;
+}
+
+.featured-text p {
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.featured-image {
+    flex: 0 0 48%;
+    display: flex;
+    gap: 2%;
+    align-items: stretch;
+}
+
+.sub-bottom,
+.sub-vertical {
+    flex: 1 1 0;
+    padding: 1vw 0;
+    display: flex;
+}
+
+.sub-bottom img,
+.sub-vertical img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+
+.sub-vertical img {
+    background: rgba(255, 255, 255, 0.05);
+    object-fit: contain;
+}
+
+.other-experience {
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+}
+
+a {
+    color: #AAAAFF;
+}
+
+.other-experience h2 {
+    font-size: 2.5vw;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-between;
+    gap: 2%;
+    flex-wrap: nowrap;
+}
+
+.card {
+    flex: 0 0 32%;
+    padding: 3vh 2vw;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+}
+
+.card h3 {
+    font-size: 1.3rem;
+}
+
+.card p {
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 60rem) {
+    .intro {
+        max-width: 100%;
+    }
+
+    .intro h1 {
+        font-size: 6vw;
+    }
+
+    .intro p {
+        font-size: 4vw;
+    }
+
+    .featured {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .featured p {
+        font-size: 4vw;
+    }
+
+    .featured-text,
+    .featured-image {
+        flex: none;
+        gap: 2vw;
+        width: 100%;
+    }
+
+    .featured-text h2,
+    .other-experience h2 {
+        font-size: 6vw;
+    }
+
+    .sub-bottom,
+    .sub-vertical {
+        flex: 1 1 0;
+    }
+
+    .sub-bottom img,
+    .sub-vertical img {
+        height: auto;
+    }
+
+    .cards {
+        flex-direction: column;
+        gap: 2vh;
+    }
+
+    .card h3 {
+        font-size: 6vw;
+    }
+
+    .card p {
+        font-size: 4vw;
+    }
+
+    .card {
+        flex: none;
+        width: 100%;
+    }
+}
